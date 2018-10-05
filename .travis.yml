@@ -1,0 +1,32 @@
+language: haskell
+
+cache:
+  directories:
+    - $HOME/.stack
+
+os:
+  - linux
+
+ghc:
+  - 8.4.3
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  on:
+    branch: dev
+  local_dir: _site
+  target_branch: master
+
+before_install:
+  - mkdir -p $HOME/.local/bin;
+  - export PATH="$HOME/.local/bin:${PATH}"
+  - curl -Lk https://www.stackage.org/stack/linux-x86_64 | tar xz --strip-components=1 -C $HOME/.local/bin;
+
+install:
+  - stack build --system-ghc
+
+script:
+  - stack exec --system-ghc site build
+  - touch _site/.nojekyll
