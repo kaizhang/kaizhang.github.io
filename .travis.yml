@@ -28,5 +28,5 @@ install:
   - stack build --system-ghc
 
 script:
-  - stack exec --system-ghc site build
+  - stack exec --system-ghc kzhang build
   - touch _site/.nojekyll
