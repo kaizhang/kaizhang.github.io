@@ -1,7 +1,7 @@
-resolver: lts-12.11
+resolver: nightly-2019-01-22
 
 packages:
 - .
 
 extra-deps:
-- hakyll-sass-0.2.3@sha256:be00ce113a00f28794b607fd08866068c47c782b47d7a91ea6ada04b69cb4671
+- hakyll-sass-0.2.4

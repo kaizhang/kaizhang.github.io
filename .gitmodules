@@ -1,0 +1,6 @@
+[submodule "third_party/motion-ui"]
+	path = third_party/motion-ui
+	url = https://github.com/zurb/motion-ui.git
+[submodule "third_party/foundation-sites"]
+	path = third_party/foundation-sites
+	url = https://github.com/zurb/foundation-sites.git
