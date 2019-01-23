@@ -1,7 +1,7 @@
 ---
 layout: cv
-title: Kai Zhang
-subtitle: Biologist, Computer Scientist.
+title: Curriculum Vitae
+subtitle: Kai Zhang
 ---
 
 :::::personal
@@ -28,7 +28,7 @@ subtitle: Biologist, Computer Scientist.
 
 ### Research interests
 
-I develop and apply systems biology approaches to study gene regulation. Specifically, I combine genomics, epigenomics and single-cell genomics, study mechanism of transcriptional regulation, construct network, leading to discovery of critical genes in various biological process. 
+I develop and apply systems biology approaches to study gene regulation. Specifically, I utilize genomics, epigenomics and single-cell genomics data to study transcriptional regulatory elements, construct gene regulatory networks and identify driver genes in different diseases and biological processes. 
 
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -99,16 +99,6 @@ antagonizing HIV latency.
 -->
 
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-<!-- 
-## Awards
-
-`2012`
-President, *Royal Society*, London, UK
-
-Associate, *French Academy of Science*, Paris, France
-
--->
 
 :::publications
 
