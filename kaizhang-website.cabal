@@ -8,9 +8,11 @@ cabal-version:      >= 1.10
 
 executable kzhang
   main-is:          Main.hs
+  other-modules:    Lib.Compiler.CV
   hs-source-dirs:   compiler
   build-depends:    base == 4.*
                   , hakyll == 4.12.*
                   , hakyll-sass
+                  , pandoc-types
   ghc-options:      -threaded
   default-language: Haskell2010

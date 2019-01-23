@@ -1,4 +1,4 @@
-language: haskell
+language: c
 
 cache:
   directories:
@@ -6,9 +6,6 @@ cache:
 
 os:
   - linux
-
-ghc:
-  - 8.4.3
 
 deploy:
   provider: pages
@@ -25,8 +22,8 @@ before_install:
   - curl -Lk https://www.stackage.org/stack/linux-x86_64 | tar xz --strip-components=1 -C $HOME/.local/bin;
 
 install:
-  - stack build --system-ghc
+  - stack build
 
 script:
-  - stack exec --system-ghc kzhang build
+  - stack exec kzhang build
   - touch _site/.nojekyll

@@ -3,6 +3,8 @@ import           Data.Monoid ((<>))
 import           Hakyll
 import Hakyll.Web.Sass (sassCompilerWith, sassDefConfig, SassOptions(..))
 
+import Lib.Compiler.CV (cvCompiler)
+
 saasOptions = sassDefConfig
     { sassIncludePaths      = Just [ "third_party/foundation-sites/scss"
                                    , "third_party/motion-ui/src" ]
@@ -35,8 +37,13 @@ main = hakyll $ do
 
     match "web/pages/*.html" $ do
         route $ gsubRoute "web/pages/" $ const ""
-        compile $ do
-            getResourceBody
-                >>= loadAndApplyTemplate "web/templates/default.html" defaultContext
-                >>= relativizeUrls
+        compile $ getResourceBody >>= loadAndApplyTemplate
+            "web/templates/default.html" defaultContext >>=
+            relativizeUrls
+
+    match "web/pages/cv.md" $ do
+        route $ constRoute "cv.html"
+        compile $ cvCompiler >>= loadAndApplyTemplate
+            "web/templates/cv.html" defaultContext >>=
+            relativizeUrls
 
