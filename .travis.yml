@@ -27,3 +27,4 @@ install:
 script:
   - stack exec kzhang build
   - touch _site/.nojekyll
+  - echo "kzhang.org" > touch _site/CNAME
