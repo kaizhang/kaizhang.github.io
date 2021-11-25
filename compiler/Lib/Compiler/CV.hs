@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Lib.Compiler.CV where
 
 import           Hakyll

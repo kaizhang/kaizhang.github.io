@@ -11,7 +11,7 @@ executable kzhang
   other-modules:    Lib.Compiler.CV
   hs-source-dirs:   compiler
   build-depends:    base == 4.*
-                  , hakyll == 4.12.*
+                  , hakyll > 4.13
                   , hakyll-sass
                   , pandoc-types
   ghc-options:      -threaded
