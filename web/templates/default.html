@@ -5,35 +5,21 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Home</title>
+    <title>$title$</title>
 
     <!-- Foundation CSS -->
-    <link href="static/css/app.css" rel="stylesheet" type="text/css">
+    <link href="static/css/app.css" rel='stylesheet' type='text/css'>
 </head>
 
 
 <body>
-    <div data-sticky-container>
-<div class="top-bar" data-sticky data-options="marginTop:0;" style="width:100%">
-    <div class="top-bar-left">
-      <ul class="menu">
-        <li class="menu-text"><a href="index.html">Kai Zhang</a></li>
-      </ul>
-    </div>
-    <div class="top-bar-right">
-      <ul class="menu">
-        <li><a class="ui item" href="./cv.html">Curriculum Vitae</a></li>
-        <li><a class="ui item" href="https://github.com/kaizhang">GITHUB</a></li>
-      </ul>
-    </div>
-</div>
-</div>
+    $partial("web/templates/header.html")$
 
     <main role="main">
-        
+        $body$
     </main>
 
-    <footer></footer>
+    $partial("web/templates/footer.html")$
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/what-input/5.1.2/what-input.min.js"></script>

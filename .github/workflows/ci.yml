@@ -1,0 +1,42 @@
+name: Continuous integration
+on: 
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build ubuntu
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+
+      - name: Cache haskell packages
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-haskell-packages
+        with:
+          path: ~/.stack
+          key: ${{ runner.os }}-build-${{ env.cache-name }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Install dependency
+        run: sudo apt-get install haskell-stack libcairo2-dev libpango1.0-dev
+
+      - name: Build
+        run: |
+          stack build
+          stack exec kzhang build
+          touch _site/.nojekyll
+          echo kzhang.org > _site/CNAME
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
+          publish_branch: dev
+          force_orphan: true
