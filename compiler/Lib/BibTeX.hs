@@ -53,7 +53,6 @@ import           Safe                   (readMay)
 import           Text.Printf            (printf)
 import           Text.DocLayout         (literal, hsep, nest, hang, Doc(..),
                                          braces, ($$), cr)
-import Data.FileEmbed
 import Data.ByteString (ByteString)
 import qualified Data.Map as M
 

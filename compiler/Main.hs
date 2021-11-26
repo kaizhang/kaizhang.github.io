@@ -3,7 +3,6 @@ import           Data.Monoid ((<>))
 import           Hakyll
 import Hakyll.Web.Sass (sassCompilerWith, sassDefConfig, SassOptions(..))
 
-import Lib.Compiler.CV (cvCompiler)
 import Lib.Compiler.Publication (pubCompiler)
 
 saasOptions = sassDefConfig
@@ -40,12 +39,6 @@ main = hakyll $ do
         route $ gsubRoute "web/pages/" $ const ""
         compile $ getResourceBody >>= loadAndApplyTemplate
             "web/templates/default.html" defaultContext >>=
-            relativizeUrls
-
-    match "web/pages/cv.md" $ do
-        route $ constRoute "cv.html"
-        compile $ cvCompiler >>= loadAndApplyTemplate
-            "web/templates/cv.html" defaultContext >>=
             relativizeUrls
 
     match "web/pages/publications.bib" $ do

@@ -50,3 +50,12 @@
 
 @include motion-ui-transitions;
 @include motion-ui-animations;
+
+.is-active {
+    background: #1779ba;
+    color: white;
+}
+
+.reference-item {
+    margin: 0px 0px 20px 0px;
+}

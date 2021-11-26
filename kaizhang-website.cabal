@@ -2,23 +2,22 @@ name:               kaizhang-website
 version:            0.1.0
 author:             Kai Zhang
 maintainer:         kai@kzhang.org
-copyright:          (c) 2018 Kai Zhang
+copyright:          (c) 2022 Kai Zhang
 build-type:         Simple
 cabal-version:      >= 1.10
 
 executable kzhang
   main-is:          Main.hs
   other-modules:    Lib.BibTeX
-                    Lib.Compiler.CV
                     Lib.Compiler.Publication
   hs-source-dirs:   compiler
   build-depends:    base == 4.*
                   , bytestring
+                  , blaze-html
                   , containers
                   , citeproc
                   , data-default
                   , doclayout
-                  , file-embed
                   , hakyll > 4.13
                   , hakyll-sass
                   , mtl
