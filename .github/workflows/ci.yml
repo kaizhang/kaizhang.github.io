@@ -8,48 +8,33 @@ jobs:
   build:
     name: Build ubuntu
     runs-on: ubuntu-20.04
-
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: haskell/actions/setup@v1.2
-#        with:
-#          ghc-version: ${{ matrix.ghc }}
-#          cabal-version: ${{ matrix.cabal }}
-#      - run: cabal v2-update
-      #- run: cabal v2-freeze $CONFIG
-#      - uses: actions/cache@v2
-#        with:
-#          path: |
-#            ~/.cabal/store
-#            dist-newstyle
-#          key: ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}
-#          restore-keys: |
-#            ${{ runner.os }}-${{ matrix.ghc }}-
-#      - run: cabal exec 
+    strategy:
+      matrix:
+        ghc: ['9.0.1']
+        cabal: ['3.6.2.0']
 
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
-
-      - name: Cache haskell packages
-        uses: actions/cache@v1
-        env:
-          cache-name: cache-haskell-packages
+      - uses: haskell/actions/setup@v1.2
         with:
-          path: ~/.stack
-          key: ${{ runner.os }}-build-${{ env.cache-name }}
+          ghc-version: ${{ matrix.ghc }}
+          cabal-version: ${{ matrix.cabal }}
+      - run: cabal v2-update
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cabal/store
+            dist-newstyle
+          key: ${{ runner.os }}-${{ matrix.ghc }}-${{ hashFiles('cabal.project.freeze') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - name: Install dependency
-        run: sudo apt-get install haskell-stack libcairo2-dev libpango1.0-dev
+            ${{ runner.os }}-${{ matrix.ghc }}-
 
       - name: Build
         run: |
-          stack build
-          stack exec kzhang build
+          cabal build
+          cabal exec kzhang build
           touch _site/.nojekyll
           echo kzhang.org > _site/CNAME
       - name: Deploy

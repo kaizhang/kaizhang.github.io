@@ -4,6 +4,7 @@ import           Hakyll
 import Hakyll.Web.Sass (sassCompilerWith, sassDefConfig, SassOptions(..))
 
 import Lib.Compiler.CV (cvCompiler)
+import Lib.Compiler.Publication (pubCompiler)
 
 saasOptions = sassDefConfig
     { sassIncludePaths      = Just [ "third_party/foundation-sites/scss"
@@ -45,5 +46,11 @@ main = hakyll $ do
         route $ constRoute "cv.html"
         compile $ cvCompiler >>= loadAndApplyTemplate
             "web/templates/cv.html" defaultContext >>=
+            relativizeUrls
+
+    match "web/pages/publications.bib" $ do
+        route $ constRoute "publications.html"
+        compile $ pubCompiler >>= loadAndApplyTemplate
+            "web/templates/default.html" defaultContext >>=
             relativizeUrls
 

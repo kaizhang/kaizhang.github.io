@@ -8,11 +8,24 @@ cabal-version:      >= 1.10
 
 executable kzhang
   main-is:          Main.hs
-  other-modules:    Lib.Compiler.CV
+  other-modules:    Lib.BibTeX
+                    Lib.Compiler.CV
+                    Lib.Compiler.Publication
   hs-source-dirs:   compiler
   build-depends:    base == 4.*
+                  , bytestring
+                  , containers
+                  , citeproc
+                  , data-default
+                  , doclayout
+                  , file-embed
                   , hakyll > 4.13
                   , hakyll-sass
+                  , mtl
+                  , pandoc > 2.16
                   , pandoc-types
+                  , safe
+                  , split
+                  , text
   ghc-options:      -threaded
   default-language: Haskell2010
