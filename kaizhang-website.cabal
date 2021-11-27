@@ -10,6 +10,7 @@ executable kzhang
   main-is:          Main.hs
   other-modules:    Lib.BibTeX
                     Lib.Compiler.Publication
+                    Lib.Types
   hs-source-dirs:   compiler
   build-depends:    base == 4.*
                   , bytestring
@@ -26,5 +27,7 @@ executable kzhang
                   , safe
                   , split
                   , text
+                  , time
+                  , yaml
   ghc-options:      -threaded
   default-language: Haskell2010
