@@ -602,6 +602,7 @@ itemToReference locale variant item = do
     pmcid' <- Just <$> getRawField "pmcid" <|> return Nothing
     callNumber' <- Just <$> getRawField "library" <|> return Nothing
 
+
     -- notes
     annotation' <- Just <$>
                    (getField "annotation" <|> getField "annote")
@@ -622,8 +623,10 @@ itemToReference locale variant item = do
                            _ -> return Nothing
                    )
 
-
-
+    -- customization
+    software' <- Just <$> getRawField "software" <|> return Nothing
+    video' <- Just <$> getRawField "video" <|> return Nothing
+    website' <- Just <$> getRawField "website" <|> return Nothing
 
     let addField (_, Nothing) = id
         addField (f, Just x)  = Map.insert f x
@@ -709,6 +712,10 @@ itemToReference locale variant item = do
                 , ("abstract", FancyVal <$> abstract')
                 , ("keyword", FancyVal <$> keywords')
                 , ("status", FancyVal <$> pubstate')
+
+                , ("software", TextVal <$> software')
+                , ("video", TextVal <$> video')
+                , ("website", TextVal <$> website')
                 ]
     return $ Reference
       { referenceId             = ItemId id'

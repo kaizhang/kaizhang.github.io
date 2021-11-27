@@ -11,7 +11,7 @@ import           Hakyll
 import Hakyll.Web.Pandoc
 import Data.Default (def)
 import Text.Pandoc.Definition
-import Citeproc.Types (Reference(..), Val(..), lookupVariable, Name(..), Date(..), DateParts(..), toText)
+import Citeproc.Types (Reference(..), Val(..), lookupVariable, Name(..), Date(..), DateParts(..), toText, unItemId)
 import Text.Pandoc.Builder (Inlines, toList)
 import Text.Printf (printf)
 import qualified Data.Text as T
@@ -21,7 +21,7 @@ import Text.Pandoc.Class (runPure)
 import Data.List (intersperse, sortBy, groupBy)
 import Data.Ord
 import Data.Function (on)
-import Data.Maybe (fromJust, fromMaybe)
+import Data.Maybe (fromJust, fromMaybe, maybe)
 import Data.Char (isLetter, isSeparator)
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as H
@@ -90,28 +90,25 @@ formatBib members ref = (MetaData year $ toText journal, content)
   where
     content = Div ("", ["reference-item"], [])
         [ LineBlock [[title], authors]
-        , Div ("", ["grid-x", "align-middle"], [])
+        , Div ("", ["grid-x", "grid-margin-x", "align-middle"], []) $
             [ Div ("", ["cell", "shrink"], []) [plumx]
             , Div ("", ["cell", "shrink"], []) [Plain [Strong $ toList journal, Str $ " (" <> T.pack (show year) <> ") "]]
             , Div ("", ["cell", "shrink"], []) [altmetric]
             , Div ("", ["cell", "shrink"], []) [dimensions]
-            ]
+            , Div ("", ["cell", "show-for-medium", "medium-1"], []) []
+            , Div ("", ["cell", "shrink"], []) [Plain [Str "Media:"]]
+            , Div ("", ["cell", "shrink"], []) [pdf]
+            ] <> maybe [] (return . Div ("", ["cell", "shrink"], [])) software
+              <> maybe [] (return . Div ("", ["cell", "shrink"], [])) website
+              <> maybe [] (return . Div ("", ["cell", "shrink"], [])) video
         ]
-    title = case lookupVariable "title" ref of
-        Just (FancyVal x) -> Link nullAttr (toList x) ("https://doi.org/" <> doi, "")
-        _ -> error ""
-    authors = case lookupVariable "author" ref of
-        Just (NamesVal names) -> intersperse (Str ", ") $ map fromName names
-        _ -> error ""
-    journal = case lookupVariable "container-title" ref of
-        Just (FancyVal x) -> x
-        _ -> error ""
-    doi = case lookupVariable "doi" ref of
-        Just (TextVal x) -> x
-        _ -> error ""
-    year = case lookupVariable "issued" ref of
-        Just (DateVal (Date [DateParts x] _ _ _)) -> head x
-        _ -> error ""
+    rid = unItemId $ referenceId ref
+    title = let FancyVal x = lookupVariable' "title" ref
+            in Link nullAttr (toList x) ("https://doi.org/" <> doi, "")
+    authors = let NamesVal names = lookupVariable' "author" ref in intersperse (Str ", ") $ map fromName names
+    journal = let FancyVal x = lookupVariable' "container-title" ref in x
+    doi = let TextVal x = lookupVariable' "doi" ref in x
+    year = let DateVal (Date [DateParts x] _ _ _) = lookupVariable' "issued" ref in head x
     fromName n@Name{..} | isPresent year n members = Strong [Str $ fromJust nameGiven <> " " <> fromJust nameFamily]
                         | otherwise = Str $ fromJust nameGiven <> " " <> fromJust nameFamily
 
@@ -124,6 +121,16 @@ formatBib members ref = (MetaData year $ toText journal, content)
     plumx = RawBlock "html" $ T.pack $ printf
         "<a href='https://plu.mx/plum/a/?doi=%s' data-popup='right' data-size='small' class='plumx-plum-print-popup' data-site='plum' data-hide-when-empty='true'></a>"
         $ T.unpack doi
+    pdf = mkIcon "far fa-file-pdf" "red"  "PDF" rid
+    software = (\(TextVal x) -> [mkIcon "far fa-file-code" "black" "Software" x]) <$> lookupVariable "software" ref
+    video = (\(TextVal x) -> [mkIcon "fas fa-film" "cyan" "Video" x]) <$> lookupVariable "video" ref
+    website = (\(TextVal x) -> [mkIcon "fas fa-home" "#1779ba" "Website" x]) <$> lookupVariable "website" ref
+    mkIcon icon color tt link = RawBlock "html" $ T.pack $ printf
+        "<span data-tooltip data-click-open='false' title='%s'><a href='%s'><i style='color:%s' class='%s'></i></a>" (tt :: String) (T.unpack link) (color :: String) (icon :: String)
+
+lookupVariable' key var = case lookupVariable key var of
+    Just x -> x
+    _ -> error $ "Key is not present: " <> show key
 
 isPresent :: Int -> Name -> [Member] -> Bool
 isPresent year Name{..} members = any f members

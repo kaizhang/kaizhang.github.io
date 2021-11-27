@@ -1,5 +1,9 @@
+---
+title: Publication
+---
+
 Publications
 ============
 
- **[For a list of selected publications, click here](/publications_selected.html).**\
- Below is a list of all peer-reviewed publications. (* equal contribution. # co-correspondence.)
+[Click here to see **[selected publications]{.underline}**.](/publications_selected.html)\
+Below is a list of all peer-reviewed publications. (* equal contribution. # co-correspondence.)
