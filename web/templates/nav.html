@@ -3,20 +3,24 @@
 
     <div class="top-bar-left">
       <ul class="menu">
-        <li $if(menu1-active)$ class="active" $endif$>
-          <a class="menu-text" href="index.html">Home</a>
-        </li>
+        <li><a href="index.html">Home</a></li>
       </ul>
     </div>
 
     <div class="top-bar-right">
-      <ul class="menu">
-        <li $if(menu2-active)$ class="active" $endif$>
-          <a class="menu-text" href="/publications.html">Publication</a>
+      <ul class="dropdown menu" data-dropdown-menu>
+
+        <li>
+          <a href="/publications.html">Publication</a>
+
+          <ul class="menu">
+            <li><a href="/publications_selected.html">Selected</a></li>
+          </ul>
+
         </li>
-        <li $if(menu3-active)$ class="active" $endif$>
-          <a class="menu-text" href="https://github.com/kaizhang">Github</a>
-        </li>
+
+        <li><a href="https://github.com/kaizhang">Github</a></li>
+
       </ul>
     </div>
 

@@ -4,7 +4,7 @@ import           Hakyll
 import Hakyll.Web.Sass (sassCompilerWith, sassDefConfig, SassOptions(..))
 import Data.Yaml (decodeFileEither)
 
-import Lib.Compiler.Publication (pubCompiler)
+import Lib.Compiler.Publication
 
 saasOptions = sassDefConfig
     { sassIncludePaths      = Just [ "third_party/foundation-sites/scss"
@@ -14,9 +14,10 @@ saasOptions = sassDefConfig
 --------------------------------------------------------------------------------
 main :: IO ()
 main = do
-    members <- decodeFileEither "web/pages/people.yml" >>= \case
+    members <- decodeFileEither "data/people.yml" >>= \case
         Left err -> error $ show err
         Right x -> return x
+    publications <- readBib "data/publications.bib"
 
     hakyll $ do
         match "web/templates/*" $ compile templateBodyCompiler
@@ -41,14 +42,20 @@ main = do
             route $ constRoute "static/js/foundation.min.js"
             compile copyFileCompiler
 
+        match "web/pages/publications.md" $ do
+            route $ constRoute "publications.html"
+            compile $ pubCompiler members publications >>= loadAndApplyTemplate
+                "web/templates/default.html" (constField "menu2-active" "true" <> defaultContext) >>=
+                relativizeUrls
+
+        match "web/pages/publications_selected.md" $ do
+            route $ constRoute "publications_selected.html"
+            compile $ pubCompiler members (filter isSelected publications) >>= loadAndApplyTemplate
+                "web/templates/default.html" (constField "menu2-active" "true" <> defaultContext) >>=
+                relativizeUrls
+
         match "web/pages/*.html" $ do
             route $ gsubRoute "web/pages/" $ const ""
             compile $ getResourceBody >>= loadAndApplyTemplate
                 "web/templates/default.html" defaultContext >>=
-                relativizeUrls
-
-        match "web/pages/publications.bib" $ do
-            route $ constRoute "publications.html"
-            compile $ pubCompiler members >>= loadAndApplyTemplate
-                "web/templates/default.html" (constField "menu2-active" "true" <> defaultContext) >>=
                 relativizeUrls

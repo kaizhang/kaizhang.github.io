@@ -51,11 +51,11 @@
 @include motion-ui-transitions;
 @include motion-ui-animations;
 
-.is-active {
-    background: #1779ba;
+a.is-active {
+    background: $primary-color;
     color: white;
 }
 
 .reference-item {
-    margin: 0px 0px 20px 0px;
+    margin: 20px 0px;
 }
