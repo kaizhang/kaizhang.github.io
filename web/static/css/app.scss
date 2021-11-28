@@ -51,6 +51,17 @@
 @include motion-ui-transitions;
 @include motion-ui-animations;
 
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+  
+#main {
+    padding-top: 15px;
+    flex: 1;
+}
+
 a.is-active {
     background: $primary-color;
     color: white;
@@ -58,4 +69,35 @@ a.is-active {
 
 .reference-item {
     margin: 20px 0px;
+}
+
+.top-bar {
+    backdrop-filter: blur(10px);
+}
+
+.top-bar-left>ul, .top-bar-right>ul {
+    background-color: transparent;
+}
+
+.top-bar .menu a {
+    color: #404040;
+    font-weight: 900;
+}
+
+.top-bar .menu a:hover, .dropdown.menu > li.is-active > a {
+    color: black;
+}
+
+footer {
+    background-color: #404040;
+    color: #FEFEFE;
+    padding: 20px 20px;
+}
+
+footer .badge {
+    background-color: #FEFEFE;
+}
+
+footer a {
+    margin: 10px;
 }
