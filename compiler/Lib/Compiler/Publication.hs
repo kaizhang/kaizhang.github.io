@@ -31,26 +31,13 @@ import           Data.Time                       (toGregorian)
 import Lib.BibTeX
 import Lib.Types
 
-{-
-pubCompiler :: (Reference Inlines -> Bool) -> [Member] -> Compiler (Item String)
-pubCompiler filterFn members =
-    fmap (f . groupBib . map (formatBib members) . filter filterFn . parseBib . T.pack) <$> getResourceString
-  where
-    f x = H.renderHtml x <> js
-    js = "<script async src='https://badge.dimensions.ai/badge.js'></script>" <>
-        "<script type='text/javascript' src='https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js'></script>" <>
-        --"<script type='text/javascript' src='//cdn.plu.mx/widget-details.js'></script>"
-        "<script type='text/javascript' src='//cdn.plu.mx/widget-popup.js'></script>"
-        -}
-
 pubCompiler :: [Member] -> [Reference Inlines] -> Compiler (Item String)
 pubCompiler members refs = fmap (fmap render) $ getResourceString >>= readPandoc
   where
     render (Pandoc _ blk) = H.renderHtml (groupBib blk $ map (formatBib members) refs) <> js
     js = "<script async src='https://badge.dimensions.ai/badge.js'></script>" <>
-        "<script type='text/javascript' src='https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js'></script>" <>
-        --"<script type='text/javascript' src='//cdn.plu.mx/widget-details.js'></script>"
-        "<script type='text/javascript' src='//cdn.plu.mx/widget-popup.js'></script>"
+        "<script async type='text/javascript' src='https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js'></script>" <>
+        "<script async type='text/javascript' src='//cdn.plu.mx/widget-popup.js'></script>"
 
 readBib :: FilePath -> IO [Reference Inlines]
 readBib fl = (readBibtexString Bibtex mempty (const True) <$> T.readFile fl) >>= \case
