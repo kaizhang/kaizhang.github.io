@@ -23,7 +23,7 @@ import Data.Ord
 import Data.Function (on)
 import Data.Maybe (fromJust, fromMaybe, maybe)
 import Data.Char (isLetter, isSeparator)
-import qualified Text.Blaze.Html5 as H
+import qualified Text.Blaze.Html5 as H hiding (style)
 import qualified Text.Blaze.Html5.Attributes as H
 import qualified Text.Blaze.Html.Renderer.String as H
 import           Data.Time                       (toGregorian)
@@ -51,10 +51,7 @@ data MetaData = MetaData
 
 groupBib :: [Block] -> [(MetaData, Block)] -> H.Html
 groupBib txt refs = H.div H.! H.class_ "grid-x" $ do
-    H.div H.! H.class_ "cell large-1 medium-2 show-for-medium" $
-        H.nav H.! H.class_ "sticky-container" H.! H.dataAttribute "sticky-container" mempty $
-        H.div H.! H.class_ "sticky" H.! H.dataAttribute "sticky" mempty H.!
-        H.dataAttribute "anchor" "main" H.! H.dataAttribute "margin-top" "5" $
+    H.div H.! H.class_ "cell large-1 medium-2 show-for-medium" $ H.nav H.! H.style "position:sticky;top:90px;" $
         H.ul H.! H.class_ "vertical menu" H.! H.dataAttribute "magellan" mempty $
             mapM_ mkMenu refGroup
     H.div H.! H.class_ "sections cell auto medium-text-justify" $ do
