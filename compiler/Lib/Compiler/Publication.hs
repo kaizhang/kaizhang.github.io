@@ -18,7 +18,7 @@ import qualified Data.Text as T
 import qualified Data.Text.IO as T
 import Text.Pandoc.Writers.HTML (writeHtml5)
 import Text.Pandoc.Class (runPure)
-import Data.List (intersperse, sortBy, groupBy)
+import Data.List (intercalate, sortBy, groupBy)
 import Data.Ord
 import Data.Function (on)
 import Data.Maybe (fromJust, fromMaybe, maybe)
@@ -36,7 +36,7 @@ pubCompiler members refs = fmap (fmap render) $ getResourceString >>= readPandoc
   where
     render (Pandoc _ blk) = H.renderHtml (groupBib blk $ map (formatBib members) refs) <> js
     js = "<script async src='https://badge.dimensions.ai/badge.js'></script>" <>
-        "<script async type='text/javascript' src='https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js'></script>" <>
+        --"<script async type='text/javascript' src='https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js'></script>" <>
         "<script async type='text/javascript' src='//cdn.plu.mx/widget-popup.js'></script>"
 
 readBib :: FilePath -> IO [Reference Inlines]
@@ -77,7 +77,7 @@ formatBib members ref = (MetaData year $ toText journal, content)
         , Div ("", ["grid-x", "grid-margin-x", "align-middle"], []) $
             [ Div ("", ["cell", "shrink"], []) [plumx]
             , Div ("", ["cell", "shrink"], []) [Plain [Strong $ toList journal, Str $ " (" <> T.pack (show year) <> ") "]]
-            , Div ("", ["cell", "shrink"], []) [altmetric]
+            --, Div ("", ["cell", "shrink"], []) [altmetric]
             , Div ("", ["cell", "shrink"], []) [dimensions]
             , Div ("", ["cell", "show-for-medium", "medium-1"], []) []
             , Div ("", ["cell", "shrink"], []) [Plain [Str "Media:"]]
@@ -89,21 +89,26 @@ formatBib members ref = (MetaData year $ toText journal, content)
     rid = unItemId $ referenceId ref
     title = let FancyVal x = lookupVariable' "title" ref
             in Link nullAttr (toList x) ("https://doi.org/" <> doi, "")
-    authors = let NamesVal names = lookupVariable' "author" ref in intersperse (Str ", ") $ map fromName names
+    authors = let NamesVal names = lookupVariable' "author" ref
+              in intercalate [Str ", "] $ map fromName names
     journal = let FancyVal x = lookupVariable' "container-title" ref in x
     doi = let TextVal x = lookupVariable' "doi" ref in x
     year = let DateVal (Date [DateParts x] _ _ _) = lookupVariable' "issued" ref in head x
-    fromName n@Name{..} | isPresent year n members = Strong [Str $ fromJust nameGiven <> " " <> fromJust nameFamily]
-                        | otherwise = Str $ fromJust nameGiven <> " " <> fromJust nameFamily
+    fromName n@Name{..} =
+        let lastName = if T.last (fromJust nameFamily) == '#'
+                then [Str $ T.init $ fromJust nameFamily, Superscript [Str "#"]]
+                else [Str $ fromJust nameFamily]
+            fullName = [Str $ fromJust nameGiven, Space] <> lastName
+        in if isPresent year n members then [Strong fullName] else fullName
 
     altmetric = RawBlock "html" $ T.pack $ printf
-        "<div data-badge-popover='right' data-doi='%s' data-condensed='true' data-hide-no-mentions='true' class='altmetric-embed'></div>"
+        "<div data-badge-popover='top' data-doi='%s' data-condensed='true' data-hide-no-mentions='true' class='altmetric-embed'></div>"
         $ T.unpack doi
     dimensions = RawBlock "html" $ T.pack $ printf
-        "<span class='__dimensions_badge_embed__' data-doi='%s' data-style='small_rectangle'></span>"
+        "<span class='__dimensions_badge_embed__' data-doi='%s' data-style='small_rectangle' data-legend='hover-top'></span>"
         $ T.unpack doi
     plumx = RawBlock "html" $ T.pack $ printf
-        "<a href='https://plu.mx/plum/a/?doi=%s' data-popup='right' data-size='small' class='plumx-plum-print-popup' data-site='plum' data-hide-when-empty='true'></a>"
+        "<a href='https://plu.mx/plum/a/?doi=%s' data-popup='top' data-size='small' class='plumx-plum-print-popup' data-site='plum' data-hide-when-empty='true'></a>"
         $ T.unpack doi
     pdf = mkIcon "far fa-file-pdf" "red"  "PDF" rid
     software = (\(TextVal x) -> [mkIcon "far fa-file-code" "black" "Software" x]) <$> lookupVariable "software" ref
