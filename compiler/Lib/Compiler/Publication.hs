@@ -110,12 +110,13 @@ formatBib members ref = (MetaData year $ toText journal, content)
     plumx = RawBlock "html" $ T.pack $ printf
         "<a href='https://plu.mx/plum/a/?doi=%s' data-popup='top' data-size='small' class='plumx-plum-print-popup' data-site='plum' data-hide-when-empty='true'></a>"
         $ T.unpack doi
-    pdf = mkIcon "far fa-file-pdf" "red"  "PDF" rid
+    pdf = mkIcon "far fa-file-pdf" "red"  "PDF" $ pubRootUrl <> rid <> ".pdf" 
     software = (\(TextVal x) -> [mkIcon "far fa-file-code" "black" "Software" x]) <$> lookupVariable "software" ref
     video = (\(TextVal x) -> [mkIcon "fas fa-film" "cyan" "Video" x]) <$> lookupVariable "video" ref
     website = (\(TextVal x) -> [mkIcon "fas fa-home" "#1779ba" "Website" x]) <$> lookupVariable "website" ref
     mkIcon icon color tt link = RawBlock "html" $ T.pack $ printf
         "<span data-tooltip data-click-open='false' title='%s'><a href='%s'><i style='color:%s' class='%s'></i></a>" (tt :: String) (T.unpack link) (color :: String) (icon :: String)
+    pubRootUrl = "http://renlab.sdsc.edu/kai/my_paper/"
 
 lookupVariable' key var = case lookupVariable key var of
     Just x -> x
